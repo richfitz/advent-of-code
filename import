@@ -1,0 +1,55 @@
+#!/usr/bin/env Rscript
+main <- function() {
+  import(commandArgs(TRUE)[[1]])
+}
+
+import <- function(src, dest = ".") {
+  year <- gsub("[^0-9]", "", src)
+
+  path <- file.path(dest, year)
+  unlink(path, recursive = TRUE)
+  dir.create(path, FALSE, TRUE)
+
+  for (p in dir(src, pattern = "d[0-9]{2}", full.names = TRUE)) {
+    name <- switch(year,
+                   "2020" = "rich-script.R",
+                   "2018" = "richfitz.R",
+                   "rich.R")
+    test_prefix <- switch(year,
+                          "2022" = "test-input",
+                          "2021" = "rich-test",
+                          "2020" = "rich-test",
+                          "2018" = "richfitz-test-input",
+                          stop("Unknown pattern for this year"))
+    if (file.exists(file.path(p, name))) {
+      day <- basename(p)
+      message(sprintf("Importing %s", day))
+      code <- readLines(file.path(p, name))
+      input_txt <- sprintf("input-%s.txt", day)
+      file.copy(file.path(p, "rich-input.txt"), file.path(path, input_txt),
+                overwrite = TRUE)
+      code <- sub("rich-input.txt", input_txt, code, fixed = TRUE)
+
+      subs <- c("rich-input.txt" = input_txt)
+
+      test <- dir(p, sprintf("%s.*\\.txt", test_prefix), full.names = TRUE)
+      test_dest <- sub(test_prefix, sprintf("test-input-%s", day),
+                       basename(test))
+      if (length(test_dest) == 1) {
+        test_dest <- sub("-1", "", test_dest)
+      }
+      file.copy(test, file.path(path, test_dest), overwrite = TRUE)
+      subs[basename(test)] <- test_dest
+
+      for (i in seq_along(subs)) {
+        code <- sub(names(subs)[[i]], subs[[i]], code, fixed = TRUE)
+      }
+
+      writeLines(code, file.path(path, paste0(day, ".R")))
+    }
+  }
+}
+
+if (!interactive()) {
+  main()
+}
