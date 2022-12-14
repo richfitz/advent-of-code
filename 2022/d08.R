@@ -9,23 +9,18 @@ look1 <- function(x, reverse = FALSE) {
   for (i in if (reverse) rev(seq_along(x)) else seq_along(x)) {
     if (ret[[i]] <- x[[i]] > m) {
       m <- x[[i]]
-      if (m == 9) {
-        break
-      }
     }
   }
   ret
 }
 
 look2 <- function(x, v) {
-  n <- 0L
-  for (i in v) {
-    n <- n + 1L
-    if (i >= x) {
-      break
+  for (i in seq_along(v)) {
+    if (v[[i]] >= x) {
+      return(i)
     }
   }
-  n
+  length(v)
 }
 
 part1 <- function(m) {
