@@ -1,6 +1,7 @@
 parse_input <- function(path) {
-  pos <- lapply(strsplit(readLines(path), " -> ", fixed = TRUE), function(x)
-    vapply(strsplit(x, ","), as.integer, integer(2)) + 1L)
+  pos <- lapply(
+    strsplit(readLines(path), " -> ", fixed = TRUE),
+    function(x) vapply(strsplit(x, ","), as.integer, integer(2)) + 1L)
   nr <- max(vapply(pos, function(p) max(p[2L, ]), numeric(1))) + 1L
   m <- matrix(TRUE, nr, 1001L)
   for (p in pos) {
