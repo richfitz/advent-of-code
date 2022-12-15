@@ -3,6 +3,18 @@ main <- function() {
   import(commandArgs(TRUE)[[1]])
 }
 
+extra <- list(
+  "2022" = list(
+    d13 = "rich-no-recursion.R"))
+
+replace <- function(path, subs) {
+  code <- readLines(path)
+  for (i in seq_along(subs)) {
+    code <- sub(names(subs)[[i]], subs[[i]], code, fixed = TRUE)
+  }
+  code
+}
+
 import <- function(src, dest = ".") {
   year <- gsub("[^0-9]", "", src)
 
@@ -24,11 +36,9 @@ import <- function(src, dest = ".") {
     if (file.exists(file.path(p, name))) {
       day <- basename(p)
       message(sprintf("Importing %s", day))
-      code <- readLines(file.path(p, name))
       input_txt <- sprintf("input-%s.txt", day)
       file.copy(file.path(p, "rich-input.txt"), file.path(path, input_txt),
                 overwrite = TRUE)
-      code <- sub("rich-input.txt", input_txt, code, fixed = TRUE)
 
       subs <- c("rich-input.txt" = input_txt)
 
@@ -41,11 +51,12 @@ import <- function(src, dest = ".") {
       file.copy(test, file.path(path, test_dest), overwrite = TRUE)
       subs[basename(test)] <- test_dest
 
-      for (i in seq_along(subs)) {
-        code <- sub(names(subs)[[i]], subs[[i]], code, fixed = TRUE)
+      writeLines(replace(file.path(p, name), subs),
+                 file.path(path, paste0(day, ".R")))
+      for (f in extra[[year]][[day]]) {
+        writeLines(replace(file.path(p, f), subs),
+                   file.path(path, sprintf("%s-%s", day, sub("rich-", "", f))))
       }
-
-      writeLines(code, file.path(path, paste0(day, ".R")))
     }
   }
 }
