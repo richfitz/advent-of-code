@@ -5,7 +5,8 @@ main <- function() {
 
 extra <- list(
   "2022" = list(
-    d13 = "rich-no-recursion.R"))
+    d13 = "rich-no-recursion.R",
+    d22 = "rich.md"))
 
 replace <- function(path, subs) {
   code <- readLines(path)

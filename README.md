@@ -4,6 +4,8 @@ Solutions to Advent of Code, created as part of our yearly departmental challeng
 
 These all use R with only default-loaded packages. Normally I aim for some compromise between fairly small, fairly fast and somewhat readable.
 
+In 2022 I am trying to find what is, to me, the "nicest" solution, and the version here is rarely the exact version used submitting the answer.
+
 ## Timing and code size information
 
 Running
