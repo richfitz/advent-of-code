@@ -23,6 +23,15 @@ import <- function(src, dest = ".") {
   unlink(path, recursive = TRUE)
   dir.create(path, FALSE, TRUE)
 
+  if (as.integer(year) <= 2022) {
+    import_old(year, src, dest)
+  } else {
+    import_new(year, src, dest)
+  }
+}
+
+import_old <- function(year, src, dest) {
+  path <- file.path(dest, year)
   for (p in dir(src, pattern = "d[0-9]{2}", full.names = TRUE)) {
     name <- switch(year,
                    "2020" = "rich-script.R",
@@ -57,6 +66,47 @@ import <- function(src, dest = ".") {
       for (f in extra[[year]][[day]]) {
         writeLines(replace(file.path(p, f), subs),
                    file.path(path, sprintf("%s-%s", day, sub("rich-", "", f))))
+      }
+    }
+  }
+}
+
+
+import_new <- function(year, src, dest) {
+  path <- file.path(dest, year)
+  for (p in dir(src, pattern = "d[0-9]{2}", full.names = TRUE)) {
+    path_py <- file.path(p, "rich.py")
+    path_r <- file.path(p, "rich.r")
+    if (file.exists(path_py) || file.exists(path_r)) {
+      day <- basename(p)
+      code <- c(if (file.exists(path_py)) readLines(path_py) else NULL,
+                if (file.exists(path_r)) readLines(path_r) else NULL)
+      re <- '".*\\.txt"'
+      code <- code[grepl(re, code)]
+      m <- gregexpr(re, code)
+      i <- rep(seq_along(m), lengths(m))
+      j <- unlist(m)
+      k <- j + unlist(lapply(m, attr, "match.length")) - 1
+
+      files_from <- unique(substr(code[i], j + 1, k - 1))
+      files_to <- files_from
+      files_to[files_to == "rich-input.txt"] <- sprintf("input-%s.txt", day)
+      files_to[files_to == "test.txt"] <- sprintf("test-input-%s.txt", day)
+      files_to <- sub("test([0-9])\\.txt",
+                      sprintf("test-input-%s-\\1.txt", day),
+                      files_to)
+
+      file.copy(file.path(p, files_from),
+                file.path(path, files_to), overwrite = TRUE)
+
+      subs <- setNames(files_to, files_from)
+      if (file.exists(path_py)) {
+        writeLines(replace(path_py, subs),
+                   file.path(path, paste0(day, ".py")))
+      }
+      if (file.exists(path_r)) {
+        writeLines(replace(path_r, subs),
+                   file.path(path, paste0(day, ".R")))
       }
     }
   }
