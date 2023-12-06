@@ -6,6 +6,8 @@ These all use R with only default-loaded packages. Normally I aim for some compr
 
 In 2022 I am trying to find what is, to me, the "nicest" solution, and the version here is rarely the exact version used submitting the answer.
 
+In 2023 I am trying to do the puzzle first in Python, though also doing an R solution afterwards.
+
 ## Timing and code size information
 
 Running
