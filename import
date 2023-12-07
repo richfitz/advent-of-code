@@ -76,7 +76,7 @@ import_new <- function(year, src, dest) {
   path <- file.path(dest, year)
   for (p in dir(src, pattern = "d[0-9]{2}", full.names = TRUE)) {
     path_py <- file.path(p, "rich.py")
-    path_r <- file.path(p, "rich.r")
+    path_r <- file.path(p, "rich.R")
     if (file.exists(path_py) || file.exists(path_r)) {
       day <- basename(p)
       code <- c(if (file.exists(path_py)) readLines(path_py) else NULL,
