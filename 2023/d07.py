@@ -12,7 +12,7 @@ def parse_hand(hand, order):
     counts = [0] * len(order)
     for i in values:
         counts[i] += 1
-    if order[12] == "J" and counts[0] > 0 and counts[1] < 5:
+    if order[12] == "J" and counts[0] > 0:
         counts[index_of_max(counts[1:]) + 1] += counts[0]
         counts[0] = 0
     return sorted(counts, reverse=True) + values
