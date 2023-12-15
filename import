@@ -92,6 +92,8 @@ import_new <- function(year, src, dest) {
       files_to <- files_from
       files_to[files_to == "rich-input.txt"] <- sprintf("input-%s.txt", day)
       files_to[files_to == "test.txt"] <- sprintf("test-input-%s.txt", day)
+      files_to[files_to == "test-input.txt"] <-
+        sprintf("test-input-%s.txt", day)
       files_to <- sub("test([0-9])\\.txt",
                       sprintf("test-input-%s-\\1.txt", day),
                       files_to)

@@ -46,7 +46,7 @@ def part2(d):
     return tot
 
 
-d = parse_input("test-input.txt")
+d = parse_input("test-input-d03.txt")
 assert part1(d) == 4361
 assert part2(d) == 467835
 
