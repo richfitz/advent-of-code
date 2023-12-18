@@ -28,5 +28,5 @@ stopifnot(distances(test, 10) == 1030)
 stopifnot(distances(test, 100) == 8410)
 
 d <- parse_input("input-d11.txt")
-print(part1(d))
-print(part2(d))
+part1(d)
+part2(d)
