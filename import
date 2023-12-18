@@ -97,9 +97,8 @@ import_new <- function(year, src, dest) {
       files_to <- sub("test([0-9])\\.txt",
                       sprintf("test-input-%s-\\1.txt", day),
                       files_to)
-
-      file.copy(file.path(p, files_from),
-                file.path(path, files_to), overwrite = TRUE)
+      fs::file_copy(file.path(p, files_from),
+                    file.path(path, files_to), overwrite = TRUE)
 
       subs <- setNames(files_to, files_from)
       if (file.exists(path_py)) {
@@ -116,4 +115,5 @@ import_new <- function(year, src, dest) {
 
 if (!interactive()) {
   main()
+  # import("~/tmp/advent-of-code-2023")
 }
